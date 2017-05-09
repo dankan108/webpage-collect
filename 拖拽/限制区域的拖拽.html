@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <div id="d" style="width: 100px;height: 100px;background: blue;position: absolute;top:300px;"></div>
+    <div id="b" style="width: 300px;height: 300px;background: red"></div>
+    <script>
+        function Drag(target, area) {
+                this.target = target;
+                this.area = area;
+            }
+
+            //根据传入的值获取目标
+            Drag.prototype.dragTarget = function(target) {
+                if(typeof target === "string") {
+                    return document.getElementById(target);
+                } else if(typeof target === "object") {
+                    return target;
+                }
+            }
+
+            Drag.prototype.init = function() {
+                this.target = this.dragTarget(this.target);
+                this.target.style.position = "absolute";
+                this.target.setAttribute("draggable","true");
+                this.dragEvent();
+            }
+
+            Drag.prototype.dragEvent = function() {
+                var that = this;
+                this.target.onmousedown = function(e) {
+                    e = e || window.event;
+                    that.disX = e.clientX - that.target.offsetLeft;
+                    that.disY = e.clientY - that.target.offsetTop;
+                    document.onmousemove = function(e) {
+                        that.moveEvent(e);
+                    }
+                    document.onmouseup = function(){
+                        that.target.style.opacity = "1";
+                        document.onmousemove = document.onmouseup = null;
+                    }
+                    return false;
+                }
+            }
+            Drag.prototype.moveEvent = function(e) {
+                var limitX = e.clientX - this.disX;
+                var limitY = e.clientY - this.disY;
+                //没有指定区域则用document
+
+                if (!this.area) {
+                    this.area = document.documentElement;
+                }
+                if(limitX < this.area.offsetLeft) {
+                    limitX = this.area.offsetLeft;
+                } else if(limitX > this.area.clientWidth + this.area.offsetLeft - this.target.offsetWidth) {
+                    limitX =  this.area.clientWidth + this.area.offsetLeft - this.target.offsetWidth;
+                }
+                if(limitY < this.area.offsetTop) {
+                    limitY = this.area.offsetTop;
+                } else if(limitY > this.area.clientHeight + this.area.offsetTop - this.target.offsetHeight) {
+                    limitY = this.area.clientHeight + this.area.offsetTop - this.target.offsetHeight;
+                }
+                this.target.style.left = limitX + "px";
+                this.target.style.top = limitY + "px";
+                this.target.style.opacity = "0.8";
+            }
+            var b =document.getElementById('b');
+            var a = new Drag('d',{offsetLeft:0,
+                                offsetTop:0,
+                                clientWidth:500,
+                                clientHeight:600
+
+            });
+            a.init();
+    </script>
+</body>
+</html>

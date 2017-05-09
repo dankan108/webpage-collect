@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+function getFullDate(millisec, lang) {
+    var data = new Date();
+    data.setTime(millisec);
+    var year = data.getFullYear(),
+        month = data.getMonth(),
+        day = data.getDate(),
+        week = data.getDay(),
+        hour = data.getHours(),
+        minute = data.getMinutes(),
+        second = data.getSeconds(),
+        am = "am",
+        pm = "pm",
+        enWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+        cnWeek = ["星期天", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+        enMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+        cnMonth = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+        cnDay = ["廿", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+        if(lang == "cn") {
+        am = "上午";
+        pm = "下午";
+    };
+    day = day < 10 ? "0" + day : day;
+    var obj = {
+        year: year,
+        month: lang ? (lang == "cn" ? cnMonth[month] : enMonth[month]) : (month < 10 ? "0" + (month + 1) : (month + 1)),
+        day: day,
+        week: lang == "en" ? enWeek[week] : cnWeek[week],
+        hour: hour < 10 ? "0" + hour : hour,
+        minute: minute < 10 ? "0" + minute : minute,
+        second: second < 10 ? "0" + second : second,
+        ms: data.getMilliseconds(),
+        am: am,
+        pm: pm,
+        Hour: hour + minute / 60 > 12 ? (hour == 12 ? pm + hour : pm + hour % 12) : am + hour,
+    };
+    return obj;
+}
+getFullDate(1494232878802,'cn');
+
+    </script>
+</body>
+</html>

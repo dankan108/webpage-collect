@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        .d1{
+            width: 100px;
+            height: 100px;
+        }
+        .in{
+            background: blue;
+            width: 100px;
+            border:2px solid black;
+            /*border-radius: 25px 0 0 25px;*/
+        }
+        .out{
+            background: red;
+            border:1px solid #eee;
+            /*border-radius: 30px;*/
+        }
+    </style>
+</head>
+<body>
+    <div id="d1"></div>
+<script>
+    function Progress(id, width, height, outClass, inClass) {
+        this.width = width;
+        this.height = height;
+        this.color = "#fff";
+        this.progress = document.createElement("div");
+        this.percentage = document.createElement("div");
+        this.filler = document.createElement("div");
+        var element = document.getElementById(id);
+        if(width) {
+            this.progress.style.width = this.width + "px";
+        } else {
+            this.progress.style.width = "200px";
+        }
+        if(height) {
+            this.progress.style.height = this.height + "px";
+        } else {
+            this.progress.style.height = "20px";
+        }
+        if(typeof outClass === "string" && (/^[a-zA-Z](\w|[-])+$/g.test(outClass))) {
+            this.progress.className = outClass;
+        } else {
+            this.progress.style.border = "1px solid #cccccc";
+            this.progress.style.backgroundImage = "linear-gradient(to bottom, #ccc 0%, #fff 40%, #ccc 100%)";
+            this.progress.style.borderRadius = "10px";
+        }
+        this.progress.style.overflow = "hidden";
+        this.progress.style.position = "relative";
+        element.appendChild(this.progress);
+        //
+        this.progress.appendChild(this.percentage);
+        this.percentage.style.width = "100%";
+        this.percentage.style.height = "100%";
+        this.percentage.style.textAlign = "center";
+        this.percentage.style.position = "absolute";
+        this.percentage.innerHTML = "0%";
+        //
+        this.progress.appendChild(this.filler);
+        this.filler.style.height = "100%";
+        this.filler.style.width = 0;
+        if(typeof inClass === "string" && (/^[a-zA-Z](\w|[-])+$/g.test(inClass))) {
+            this.filler.className = inClass;
+        } else {
+            this.filler.style.backgroundColor = "#DC7BBE";
+            this.filler.style.backgroundImage = "linear-gradient(to bottom, #0AF 0%, #0ff 40%, #0AF 100%)";
+        }
+    }
+    Progress.prototype.fill = function(value) {
+        if(value) {
+            this.percentage.innerHTML = value + "%";
+            this.percentage.style.color = this.color;
+            value = (this.progress.offsetWidth - 2) / 100 * value;
+            this.filler.style.width = value + "px";
+        } else {
+            this.filler.style.width = 0;
+            this.percentage.innerHTML = "0%";
+        }
+    }
+
+    //调用
+    var a = new Progress('d1',100,20,'out');
+    var n =2;
+    var timer = setInterval(function(){
+        if(n>99){clearInterval(timer)};
+        a.fill(n);
+        n++;},50)
+
+</script>
+
+</body>
+</html>
